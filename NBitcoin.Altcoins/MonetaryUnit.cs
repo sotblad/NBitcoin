@@ -88,33 +88,29 @@ namespace NBitcoin.Altcoins
 			var builder = new NetworkBuilder();
 			builder.SetConsensus(new Consensus()
 			{
-				SubsidyHalvingInterval = 210000,
-				MajorityEnforceBlockUpgrade = 1500,
-				MajorityRejectBlockOutdated = 1900,
-				MajorityWindow = 200,
+				MajorityEnforceBlockUpgrade = 750,
+				MajorityRejectBlockOutdated = 950,
+				MajorityWindow = 1000,
 				PowLimit = new Target(new uint256("00000fffff000000000000000000000000000000000000000000000000000000")),
-				PowTargetTimespan = TimeSpan.FromSeconds(30),
-				PowTargetSpacing = TimeSpan.FromSeconds(30),
+				PowTargetTimespan = TimeSpan.FromSeconds(10 * 40),
+				PowTargetSpacing = TimeSpan.FromSeconds(1 * 40),
 				PowAllowMinDifficultyBlocks = false,
-				CoinbaseMaturity = 120,
-				//  Not set in reference client, assuming false
+				CoinbaseMaturity = 100,
 				PowNoRetargeting = false,
-				//RuleChangeActivationThreshold = 6048,
-				//MinerConfirmationWindow = 8064,
-				ConsensusFactory = MonetaryUnitConsensusFactory.Instance,
-				LitecoinWorkCalculation = true,
-				SupportSegwit = false
+				RuleChangeActivationThreshold = 250,
+				MinerConfirmationWindow = 1000,
+				ConsensusFactory = MonetaryUnitConsensusFactory.Instance
 			})
-			.SetBase58Bytes(Base58Type.PUBKEY_ADDRESS, new byte[] { 30 })
-			.SetBase58Bytes(Base58Type.SCRIPT_ADDRESS, new byte[] { 33 })
-			.SetBase58Bytes(Base58Type.SECRET_KEY, new byte[] { 158 })
+			.SetBase58Bytes(Base58Type.PUBKEY_ADDRESS, new byte[] { 16 })
+			.SetBase58Bytes(Base58Type.SCRIPT_ADDRESS, new byte[] { 76 })
+			.SetBase58Bytes(Base58Type.SECRET_KEY, new byte[] { 126 })
 			.SetBase58Bytes(Base58Type.EXT_PUBLIC_KEY, new byte[] { 0x02, 0x2D, 0x25, 0x33 })
 			.SetBase58Bytes(Base58Type.EXT_SECRET_KEY, new byte[] { 0x02, 0x21, 0x31, 0x2B })
-			.SetBech32(Bech32Type.WITNESS_PUBKEY_ADDRESS, Encoders.Bech32("vg"))
-			.SetBech32(Bech32Type.WITNESS_SCRIPT_ADDRESS, Encoders.Bech32("vg"))
-			.SetMagic(0xf7a77eff)
-			.SetPort(21102)
-			.SetRPCPort(20102)
+			.SetBech32(Bech32Type.WITNESS_PUBKEY_ADDRESS, Encoders.Bech32("mue"))
+			.SetBech32(Bech32Type.WITNESS_SCRIPT_ADDRESS, Encoders.Bech32("mue"))
+			.SetMagic(0xeafdc491)
+			.SetPort(19687)
+			.SetRPCPort(19688)
 			.SetName("monetaryunit-main")
 			.AddAlias("monetaryunit-mainnet")
 			.AddAlias("monetaryunit-mainnet")
@@ -126,7 +122,7 @@ namespace NBitcoin.Altcoins
 				new DNSSeedData("dns3.monetaryunit.org", "dns3.monetaryunit.org")
 			})
 			.AddSeeds(new NetworkAddress[0])
-			.SetGenesis("010000000000000000000000000000000000000000000000000000000000000000000000696ad20e2dd4365c7459b4a4a5af743d5e92c6da3229e6532cd605f6533f2a5b24a6a152f0ff0f1e678601000101000000010000000000000000000000000000000000000000000000000000000000000000ffffffff1004ffff001d0104084e696e746f6e646fffffffff010058850c020000004341040184710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9ac00000000");
+			.SetGenesis("010000000000000000000000000000000000000000000000000000000000000000000000c787795041016d5ee652e55e3a6aeff6c8019cf0c525887337e0b4206552691613f7fc58f0ff0f1ea12400000101000000010000000000000000000000000000000000000000000000000000000000000000ffffffff4004ffff001d010438506f77657264652062792042697473656e642d4575726f7065636f696e2d4469616d6f6e642d4d41432d42332032332f4170722f32303137ffffffff010000000000000000434104678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5fac00000000");
 			return builder;
 		}
 
@@ -140,28 +136,23 @@ namespace NBitcoin.Altcoins
 				MajorityRejectBlockOutdated = 750,
 				MajorityWindow = 1000,
 				PowLimit = new Target(new uint256("00000fffff000000000000000000000000000000000000000000000000000000")),
-				PowTargetTimespan = TimeSpan.FromSeconds(24 * 60 * 60),
-				PowTargetSpacing = TimeSpan.FromSeconds(45),
+				PowTargetTimespan = TimeSpan.FromSeconds(1 * 60),
+				PowTargetSpacing = TimeSpan.FromSeconds(1 * 10),
 				PowAllowMinDifficultyBlocks = true,
 				CoinbaseMaturity = 240,
-				//  Not set in reference client, assuming false
 				PowNoRetargeting = false,
-				//RuleChangeActivationThreshold = 6048,
-				//MinerConfirmationWindow = 8064,
-				LitecoinWorkCalculation = true,
-				ConsensusFactory = MonetaryUnitConsensusFactory.Instance,
-				SupportSegwit = false
+				ConsensusFactory = MonetaryUnitConsensusFactory.Instance
 			})
-			.SetBase58Bytes(Base58Type.PUBKEY_ADDRESS, new byte[] { 115 })
-			.SetBase58Bytes(Base58Type.SCRIPT_ADDRESS, new byte[] { 198 })
-			.SetBase58Bytes(Base58Type.SECRET_KEY, new byte[] { 243 })
-			.SetBase58Bytes(Base58Type.EXT_PUBLIC_KEY, new byte[] { 0x04, 0x35, 0x87, 0xCF })
-			.SetBase58Bytes(Base58Type.EXT_SECRET_KEY, new byte[] { 0x04, 0x35, 0x83, 0x94 })
-			.SetBech32(Bech32Type.WITNESS_PUBKEY_ADDRESS, Encoders.Bech32("vt"))
-			.SetBech32(Bech32Type.WITNESS_SCRIPT_ADDRESS, Encoders.Bech32("vt"))
-			.SetMagic(0xcdf2c0ef)
-			.SetPort(21104)
-			.SetRPCPort(21102)
+			.SetBase58Bytes(Base58Type.PUBKEY_ADDRESS, new byte[] { 139 })
+			.SetBase58Bytes(Base58Type.SCRIPT_ADDRESS, new byte[] { 19 })
+			.SetBase58Bytes(Base58Type.SECRET_KEY, new byte[] { 239 })
+			.SetBase58Bytes(Base58Type.EXT_PUBLIC_KEY, new byte[] { 0x3A, 0x80, 0x61, 0xA1 })
+			.SetBase58Bytes(Base58Type.EXT_SECRET_KEY, new byte[] { 0x3A, 0x80, 0x58, 0x37 })
+			.SetBech32(Bech32Type.WITNESS_PUBKEY_ADDRESS, Encoders.Bech32("tmue"))
+			.SetBech32(Bech32Type.WITNESS_SCRIPT_ADDRESS, Encoders.Bech32("tmue"))
+			.SetMagic(0xbd657647)
+			.SetPort(19685)
+			.SetRPCPort(19686)
 		   .SetName("monetaryunit-test")
 		   .AddAlias("monetaryunit-testnet")
 		   .AddAlias("monetaryunit-test")
@@ -171,7 +162,7 @@ namespace NBitcoin.Altcoins
 				new DNSSeedData("testnetdns.monetaryunit.org", "testnetdns.monetaryunit.org")
 		   })
 		   .AddSeeds(new NetworkAddress[0])
-		   .SetGenesis("010000000000000000000000000000000000000000000000000000000000000000000000696ad20e2dd4365c7459b4a4a5af743d5e92c6da3229e6532cd605f6533f2a5bb9a7f052f0ff0f1ef7390f000101000000010000000000000000000000000000000000000000000000000000000000000000ffffffff1004ffff001d0104084e696e746f6e646fffffffff010058850c020000004341040184710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9ac00000000");
+		   .SetGenesis("010000000000000000000000000000000000000000000000000000000000000000000000ff00e3481f61b255420602f7af626924221a41224b0d645bd2f082f82c8bc50a5746ff58f0ff0f1e98611a000101000000010000000000000000000000000000000000000000000000000000000000000000ffffffff4004ffff001d010438506f77657264652062792042697473656e642d4575726f7065636f696e2d4469616d6f6e642d4d41432d42332032332f4170722f32303137ffffffff01807c814a00000000434104678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5fac00000000");
 			return builder;
 		}
 
@@ -185,35 +176,29 @@ namespace NBitcoin.Altcoins
 				MajorityRejectBlockOutdated = 950,
 				MajorityWindow = 144,
 				PowLimit = new Target(new uint256("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")),
-				PowTargetTimespan = TimeSpan.FromSeconds(4 * 60 * 60),
-				PowTargetSpacing = TimeSpan.FromSeconds(60),
+				PowTargetTimespan = TimeSpan.FromSeconds(24 * 60 * 60),
+				PowTargetSpacing = TimeSpan.FromSeconds(1 * 60),
 				PowAllowMinDifficultyBlocks = false,
-				CoinbaseMaturity = 60,
-				//  Not set in reference client, assuming false
 				PowNoRetargeting = false,
-				//RuleChangeActivationThreshold = 6048,
-				//MinerConfirmationWindow = 8064,
-				LitecoinWorkCalculation = true,
-				ConsensusFactory = MonetaryUnitConsensusFactory.Instance,
-				SupportSegwit = false
+				ConsensusFactory = MonetaryUnitConsensusFactory.Instance
 			})
 			.SetBase58Bytes(Base58Type.PUBKEY_ADDRESS, new byte[] { 111 })
 			.SetBase58Bytes(Base58Type.SCRIPT_ADDRESS, new byte[] { 196 })
 			.SetBase58Bytes(Base58Type.SECRET_KEY, new byte[] { 239 })
 			.SetBase58Bytes(Base58Type.EXT_PUBLIC_KEY, new byte[] { 0x04, 0x35, 0x87, 0xCF })
 			.SetBase58Bytes(Base58Type.EXT_SECRET_KEY, new byte[] { 0x04, 0x35, 0x83, 0x94 })
-			.SetBech32(Bech32Type.WITNESS_PUBKEY_ADDRESS, Encoders.Bech32("vgrt"))
-			.SetBech32(Bech32Type.WITNESS_SCRIPT_ADDRESS, Encoders.Bech32("vgrt "))
-			.SetMagic(0xfabfb5da)
-			.SetPort(31102)
-			.SetRPCPort(44555) // by default this is assigned dynamically, adding port I got for testing
+			.SetBech32(Bech32Type.WITNESS_PUBKEY_ADDRESS, Encoders.Bech32("rmue"))
+			.SetBech32(Bech32Type.WITNESS_SCRIPT_ADDRESS, Encoders.Bech32("rmue "))
+			.SetMagic(0xad7ecfa2)
+			.SetPort(19685)
+			.SetRPCPort(19686)
 			.SetName("monetaryunit-reg")
 			.AddAlias("monetaryunit-regtest")
 			.AddAlias("monetaryunit-regtest")
 			.AddAlias("monetaryunit-reg")
 			.AddDNSSeeds(new DNSSeedData[0])
 			.AddSeeds(new NetworkAddress[0])
-			.SetGenesis("010000000000000000000000000000000000000000000000000000000000000000000000696ad20e2dd4365c7459b4a4a5af743d5e92c6da3229e6532cd605f6533f2a5bdae5494dffff7f20020000000101000000010000000000000000000000000000000000000000000000000000000000000000ffffffff1004ffff001d0104084e696e746f6e646fffffffff010058850c020000004341040184710fa689ad5023690c80f3a49c8f13f8d45b8c857fbcbc8bc4a8e4d3eb4b10f4d4604fa08dce601aaf0f470216fe1b51850b4acf21b179c45070ac7b03a9ac00000000");
+			.SetGenesis("010000000000000000000000000000000000000000000000000000000000000000000000c787795041016d5ee652e55e3a6aeff6c8019cf0c525887337e0b4206552691613f7fc58f0ff0f1ea12400000101000000010000000000000000000000000000000000000000000000000000000000000000ffffffff4004ffff001d010438506f77657264652062792042697473656e642d4575726f7065636f696e2d4469616d6f6e642d4d41432d42332032332f4170722f32303137ffffffff010000000000000000434104678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5fac00000000");
 			return builder;
 		}
 	}
