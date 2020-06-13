@@ -58,9 +58,8 @@ namespace NBitcoin.Altcoins
 		{
 			public override uint256 GetPoWHash()
 			{
-				var headerBytes = this.ToBytes();
-				var h = NBitcoin.Crypto.SCrypt.ComputeDerivedKey(headerBytes, headerBytes, 1024, 1, 1, null, 32);
-				return new uint256(h);
+				//TODO: Implement here
+				throw new NotSupportedException();
 			}
 		}
 
@@ -89,6 +88,7 @@ namespace NBitcoin.Altcoins
 			var builder = new NetworkBuilder();
 			builder.SetConsensus(new Consensus()
 			{
+				SubsidyHalvingInterval = 210000,
 				MajorityEnforceBlockUpgrade = 1500,
 				MajorityRejectBlockOutdated = 1900,
 				MajorityWindow = 200,
