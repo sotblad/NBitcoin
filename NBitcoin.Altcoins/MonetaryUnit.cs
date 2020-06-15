@@ -45,9 +45,7 @@ namespace NBitcoin.Altcoins
 		{
 			public override uint256 GetPoWHash()
 			{
-				var headerBytes = this.ToBytes();
-				var h = NBitcoin.Crypto.Sha256d.ComputeDerivedKey(headerBytes, headerBytes, 1024, 1, 1, null, 32);
-				return new uint256(h);
+				throw new NotSupportedException("PoW for MonetaryUnit MUE is not supported");
 			}
 		}
 
