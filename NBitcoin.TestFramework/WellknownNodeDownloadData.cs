@@ -1364,10 +1364,10 @@ namespace NBitcoin.Tests
 				},
 				Linux = new NodeOSDownloadData()
 				{
-					DownloadLink = "https://github.com/muecoin/MUE/releases/download/v2.1.6/mon-2.1.6-x86_64-linux-gnu.tar.gz",
+					DownloadLink = "https://apps.mymue.com/mon-2.1.6-x86_64-linux-gnu.tar.gz",
 					Archive = "mon-2.1.6-x86_64-linux-gnu.tar.gz",
 					Executable = "mon/bin/monetaryunitd",
-					Hash = "87aee9fd607af80fded5c8495fbb978f646cd7e7020be071ca3868840c42d62f"
+					Hash = "26d62569801cbcb2417adfbdafad4c9d9a0b32ba1f695986896814bb81caadde"
 				},
 				Mac = new NodeOSDownloadData()
 				{
