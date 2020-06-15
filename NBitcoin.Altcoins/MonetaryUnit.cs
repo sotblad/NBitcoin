@@ -7,9 +7,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace NBitcoin.Altcoins
 {
+	// Reference: https://github.com/muecoin/MUE/blob/master/src/chainparams.cpp
 	public class MonetaryUnit : NetworkSetBase
 	{
 		public static MonetaryUnit Instance { get; } = new MonetaryUnit();
@@ -20,33 +22,15 @@ namespace NBitcoin.Altcoins
 		{
 
 		}
-		//Format visual studio
-		//{({.*?}), (.*?)}
-		//Tuple.Create(new byte[]$1, $2)
-		static Tuple<byte[], int>[] pnSeed6_main = {
-			Tuple.Create(new byte[]{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x33,0x0f,0xde,0xe0}, 19687),
-			Tuple.Create(new byte[]{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x25,0x78,0xbe,0x4c}, 19687),
-			Tuple.Create(new byte[]{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x25,0x78,0xba,0x55}, 19687),
-			Tuple.Create(new byte[]{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb9,0xca,0x8c,0x3c}, 19687),
-			Tuple.Create(new byte[]{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xbc,0x47,0xdf,0xce}, 19687),
-			Tuple.Create(new byte[]{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb9,0xc2,0x8e,0x7a}, 19687),
-		};
-		static Tuple<byte[], int>[] pnSeed6_test = {
-			Tuple.Create(new byte[]{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x58,0x44,0x34,0xac}, 19685),
-			Tuple.Create(new byte[]{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0x25,0x78,0xba,0x55}, 19685),
-			Tuple.Create(new byte[]{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xbc,0x47,0xdf,0xce}, 19685),
-			Tuple.Create(new byte[]{0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,0xff,0xb9,0xc2,0x8e,0x7a}, 19685),
-		};        		     		
-
 #pragma warning disable CS0618 // Type or member is obsolete
 		public class MonetaryUnitConsensusFactory : ConsensusFactory
 		{
 			private MonetaryUnitConsensusFactory()
 			{
 			}
-
+			
 			public static MonetaryUnitConsensusFactory Instance { get; } = new MonetaryUnitConsensusFactory();
-
+			
 			public override BlockHeader CreateBlockHeader()
 			{
 				return new MonetaryUnitBlockHeader();
@@ -56,12 +40,14 @@ namespace NBitcoin.Altcoins
 				return new MonetaryUnitBlock(new MonetaryUnitBlockHeader());
 			}
 		}
-
+		
 		public class MonetaryUnitBlockHeader : BlockHeader
 		{
 			public override uint256 GetPoWHash()
 			{
-                                throw new NotSupportedException("Not supported.");
+				var headerBytes = this.ToBytes();
+				var h = NBitcoin.Crypto.Sha256d.ComputeDerivedKey(headerBytes, headerBytes, 1024, 1, 1, null, 32);
+				return new uint256(h);
 			}
 		}
 
@@ -71,38 +57,38 @@ namespace NBitcoin.Altcoins
 			{
 
 			}
+
 			public override ConsensusFactory GetConsensusFactory()
 			{
 				return MonetaryUnitConsensusFactory.Instance;
 			}
 		}
-
 #pragma warning restore CS0618 // Type or member is obsolete
 
-		protected override void PostInit()
-		{
-			RegisterDefaultCookiePath("MonetaryUnit");
-		}
+		//Format visual studio
+		//{({.*?}), (.*?)}
+		//Tuple.Create(new byte[]$1, $2)
+		//static Tuple<byte[], int>[] pnSeed6_main = null;
+		//static Tuple<byte[], int>[] pnSeed6_test = null;
 
 		protected override NetworkBuilder CreateMainnet()
 		{
-			NetworkBuilder builder = new NetworkBuilder();
+			var builder = new NetworkBuilder();
 			builder.SetConsensus(new Consensus()
 			{
-				SubsidyHalvingInterval = 210000, 
+				SubsidyHalvingInterval = 210000,
 				MajorityEnforceBlockUpgrade = 750,
 				MajorityRejectBlockOutdated = 950,
 				MajorityWindow = 1000,
-				BIP34Hash = new uint256("0b58ed450b3819ca54ab0054c4d220ca4f887d21c9e55d2a333173adf76d987f"), 
-				PowLimit = new Target(new uint256("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")),
+				PowLimit = new Target(0 >> 1),
 				PowTargetTimespan = TimeSpan.FromSeconds(10 * 40),
 				PowTargetSpacing = TimeSpan.FromSeconds(1 * 40),
 				PowAllowMinDifficultyBlocks = false,
+				CoinbaseMaturity = 50,
 				PowNoRetargeting = false,
-				RuleChangeActivationThreshold = 250,
-				MinerConfirmationWindow = 1000,
-				CoinbaseMaturity = 15,
-				ConsensusFactory = MonetaryUnitConsensusFactory.Instance
+				ConsensusFactory = MonetaryUnitConsensusFactory.Instance,
+				LitecoinWorkCalculation = false,
+				SupportSegwit = false
 			})
 			.SetBase58Bytes(Base58Type.PUBKEY_ADDRESS, new byte[] { 16 })
 			.SetBase58Bytes(Base58Type.SCRIPT_ADDRESS, new byte[] { 76 })
@@ -111,65 +97,60 @@ namespace NBitcoin.Altcoins
 			.SetBase58Bytes(Base58Type.EXT_SECRET_KEY, new byte[] { 0x02, 0x21, 0x31, 0x2B })
 			.SetBech32(Bech32Type.WITNESS_PUBKEY_ADDRESS, Encoders.Bech32("mue"))
 			.SetBech32(Bech32Type.WITNESS_SCRIPT_ADDRESS, Encoders.Bech32("mue"))
-			.SetMagic(0xEAFDC491)
-			.SetPort(19687) 
+			.SetMagic(0xeafdc491)
+			.SetPort(19687)
 			.SetRPCPort(19688)
-			.SetMaxP2PVersion(80000)
-			.SetName("mue-main")
-			.AddAlias("mue-mainnet")
+			.SetMaxP2PVersion(70800)
+			.SetName("monetaryunit-main")
 			.AddAlias("monetaryunit-mainnet")
-			.AddAlias("monetaryunit-main")
-			.AddDNSSeeds(new[]
-			{
-				new DNSSeedData("dns1.monetaryunit.org", "dns1.monetaryunit.org"),
-				new DNSSeedData("dns2.monetaryunit.org", "dns2.monetaryunit.org"),
-				new DNSSeedData("dns3.monetaryunit.org", "dns3.monetaryunit.org")
+			.AddDNSSeeds(new[]{
+				new DNSSeedData("monetaryunit.org", "dns1.monetaryunit.org"),
+				new DNSSeedData("monetaryunit.org", "dns2.monetaryunit.org"),
+				new DNSSeedData("monetaryunit.org", "dns3.monetaryunit.org"),
 			})
-			.AddSeeds(ToSeed(pnSeed6_main)) 
-			.SetGenesis("010000000000000000000000000000000000000000000000000000000000000000000000c787795041016d5ee652e55e3a6aeff6c8019cf0c525887337e0b4206552691613f7fc58f0ff0f1ea12400000101000000010000000000000000000000000000000000000000000000000000000000000000ffffffff4004ffff001d010438506f77657264652062792042697473656e642d4575726f7065636f696e2d4469616d6f6e642d4d41432d42332032332f4170722f32303137ffffffff010000000000000000434104678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5fac00000000");
+			.AddSeeds(new NetworkAddress[0])
+			.SetGenesis("0100000000000000000000000000000000000000000000000000000000000000000000006db905142382324db417761891f2d2f355ea92f27ab0fc35e59e90b50e0534edf5d2af59ffff001ff9787a00e965ffd002cd6ad0e2dc402b8044de833e06b23127ea8c3d80aec9141077149556e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b4210000000000000000000000000000000000000000000000000000000000000000ffffffff000101000000010000000000000000000000000000000000000000000000000000000000000000ffffffff420004bf91221d0104395365702030322c203230313720426974636f696e20627265616b732024352c30303020696e206c6174657374207072696365206672656e7a79ffffffff0100f2052a010000004341040d61d8653448c98731ee5fffd303c15e71ec2057b77f11ab3601979728cdaff2d68afbba14e4fa0bc44f2072b0b23ef63717f8cdfbe58dcd33f32b6afe98741aac00000000");
 			return builder;
 		}
 
-   		protected override NetworkBuilder CreateTestnet()
+		protected override NetworkBuilder CreateTestnet()
 		{
 			var builder = new NetworkBuilder();
 			builder.SetConsensus(new Consensus()
 			{
 				SubsidyHalvingInterval = 210000,
-				MajorityEnforceBlockUpgrade = 51,
-				MajorityRejectBlockOutdated = 75,
+				MajorityEnforceBlockUpgrade = 750,
+				MajorityRejectBlockOutdated = 950,
 				MajorityWindow = 1000,
-				PowLimit = new Target(new uint256("00000fffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")),
+				PowLimit = new Target(0 >> 1),
 				PowTargetTimespan = TimeSpan.FromSeconds(1 * 60),
 				PowTargetSpacing = TimeSpan.FromSeconds(1 * 10),
-				PowAllowMinDifficultyBlocks = true,
+				PowAllowMinDifficultyBlocks = false,
+				CoinbaseMaturity = 50,
 				PowNoRetargeting = false,
-				RuleChangeActivationThreshold = 1,
-				MinerConfirmationWindow = 2,
-				CoinbaseMaturity = 100,
-				ConsensusFactory = MonetaryUnitConsensusFactory.Instance
+				ConsensusFactory = MonetaryUnitConsensusFactory.Instance,
+				LitecoinWorkCalculation = false,
+				SupportSegwit = false
 			})
 			.SetBase58Bytes(Base58Type.PUBKEY_ADDRESS, new byte[] { 139 })
 			.SetBase58Bytes(Base58Type.SCRIPT_ADDRESS, new byte[] { 19 })
 			.SetBase58Bytes(Base58Type.SECRET_KEY, new byte[] { 239 })
-			.SetBase58Bytes(Base58Type.EXT_PUBLIC_KEY, new byte[] { 0x3A, 0x80, 0x61, 0xA1 })
+			.SetBase58Bytes(Base58Type.EXT_PUBLIC_KEY, new byte[] { 0x3A, 0x80, 0x61, 0xA0 })
 			.SetBase58Bytes(Base58Type.EXT_SECRET_KEY, new byte[] { 0x3A, 0x80, 0x58, 0x37 })
 			.SetBech32(Bech32Type.WITNESS_PUBKEY_ADDRESS, Encoders.Bech32("tmue"))
 			.SetBech32(Bech32Type.WITNESS_SCRIPT_ADDRESS, Encoders.Bech32("tmue"))
-			.SetMagic(0xBD657647)
+			.SetMagic(0xbd657647)
 			.SetPort(19685)
 			.SetRPCPort(19686)
-			.SetMaxP2PVersion(80000)
-			.SetName("mue-test")
-			.AddAlias("mue-testnet")
-			.AddAlias("monetaryunit-test")
+			.SetMaxP2PVersion(70800)
+			.SetName("monetaryunit-test")
 			.AddAlias("monetaryunit-testnet")
-			.AddDNSSeeds(new[]
-			{
-				new DNSSeedData("testnetdns.monetaryunit.org", "testnetdns.monetaryunit.org")
+			.AddDNSSeeds(new[]{
+				new DNSSeedData("monetaryunit.org", "testnetdns.monetaryunit.org"),
 			})
-			.AddSeeds(ToSeed(pnSeed6_test))
-			.SetGenesis("010000000000000000000000000000000000000000000000000000000000000000000000ff00e3481f61b255420602f7af626924221a41224b0d645bd2f082f82c8bc50a5746ff58f0ff0f1e98611a000101000000010000000000000000000000000000000000000000000000000000000000000000ffffffff4004ffff001d010438506f77657264652062792042697473656e642d4575726f7065636f696e2d4469616d6f6e642d4d41432d42332032332f4170722f32303137ffffffff01807c814a00000000434104678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5fac00000000");
+			.AddSeeds(new NetworkAddress[0])
+			// Incorrect, using mainnet for now
+			.SetGenesis("0100000000000000000000000000000000000000000000000000000000000000000000006db905142382324db417761891f2d2f355ea92f27ab0fc35e59e90b50e0534edf5d2af59ffff001ff9787a00e965ffd002cd6ad0e2dc402b8044de833e06b23127ea8c3d80aec9141077149556e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b4210000000000000000000000000000000000000000000000000000000000000000ffffffff000101000000010000000000000000000000000000000000000000000000000000000000000000ffffffff420004bf91221d0104395365702030322c203230313720426974636f696e20627265616b732024352c30303020696e206c6174657374207072696365206672656e7a79ffffffff0100f2052a010000004341040d61d8653448c98731ee5fffd303c15e71ec2057b77f11ab3601979728cdaff2d68afbba14e4fa0bc44f2072b0b23ef63717f8cdfbe58dcd33f32b6afe98741aac00000000");
 			return builder;
 		}
 
@@ -179,37 +160,42 @@ namespace NBitcoin.Altcoins
 			builder.SetConsensus(new Consensus()
 			{
 				SubsidyHalvingInterval = 150,
-				MajorityEnforceBlockUpgrade = 51,
-				MajorityRejectBlockOutdated = 75,
-				MajorityWindow = 144,
-				PowLimit = new Target(new uint256("7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")),
+				MajorityEnforceBlockUpgrade = 750,
+				MajorityRejectBlockOutdated = 950,
+				MajorityWindow = 1000,
+				PowLimit = new Target(0 >> 1),
 				PowTargetTimespan = TimeSpan.FromSeconds(24 * 60 * 60),
 				PowTargetSpacing = TimeSpan.FromSeconds(1 * 60),
 				PowAllowMinDifficultyBlocks = true,
-				MinimumChainWork = uint256.Zero,
-				PowNoRetargeting = true,
-				RuleChangeActivationThreshold = 108,
-				MinerConfirmationWindow = 144,
-				CoinbaseMaturity = 100,
-				ConsensusFactory = MonetaryUnitConsensusFactory.Instance
+				CoinbaseMaturity = 50,
+				PowNoRetargeting = false,
+				ConsensusFactory = MonetaryUnitConsensusFactory.Instance,
+				LitecoinWorkCalculation = false,
+				SupportSegwit = false
 			})
-			.SetBase58Bytes(Base58Type.PUBKEY_ADDRESS, new byte[] { 111 })
-			.SetBase58Bytes(Base58Type.SCRIPT_ADDRESS, new byte[] { 196 })
+			.SetBase58Bytes(Base58Type.PUBKEY_ADDRESS, new byte[] { 139 })
+			.SetBase58Bytes(Base58Type.SCRIPT_ADDRESS, new byte[] { 19 })
 			.SetBase58Bytes(Base58Type.SECRET_KEY, new byte[] { 239 })
 			.SetBase58Bytes(Base58Type.EXT_PUBLIC_KEY, new byte[] { 0x04, 0x35, 0x87, 0xCF })
 			.SetBase58Bytes(Base58Type.EXT_SECRET_KEY, new byte[] { 0x04, 0x35, 0x83, 0x94 })
-			.SetBech32(Bech32Type.WITNESS_PUBKEY_ADDRESS, Encoders.Bech32("tmue")) 
-			.SetBech32(Bech32Type.WITNESS_SCRIPT_ADDRESS, Encoders.Bech32("tmue")) 
+			.SetBech32(Bech32Type.WITNESS_PUBKEY_ADDRESS, Encoders.Bech32("qcrt"))
+			.SetBech32(Bech32Type.WITNESS_SCRIPT_ADDRESS, Encoders.Bech32("qcrt"))
 			.SetMagic(0xad7ecfa2)
 			.SetPort(19685)
 			.SetRPCPort(19686)
-			.SetMaxP2PVersion(80000)
-			.SetName("mue-reg")
-			.AddAlias("mue-regtest")
-			.AddAlias("monetaryunit-reg")
+			.SetMaxP2PVersion(70800)
+			.SetName("monetaryunit-reg")
 			.AddAlias("monetaryunit-regtest")
-			.SetGenesis("010000000000000000000000000000000000000000000000000000000000000000000000c787795041016d5ee652e55e3a6aeff6c8019cf0c525887337e0b4206552691613f7fc58f0ff0f1ea12400000101000000010000000000000000000000000000000000000000000000000000000000000000ffffffff4004ffff001d010438506f77657264652062792042697473656e642d4575726f7065636f696e2d4469616d6f6e642d4d41432d42332032332f4170722f32303137ffffffff010000000000000000434104678afdb0fe5548271967f1a67130b7105cd6a828e03909a67962e0ea1f61deb649f6bc3f4cef38c4f35504e51ec112de5c384df7ba0b8d578a4c702b6bf11d5fac00000000");
+			.AddSeeds(new NetworkAddress[0])
+			// Incorrect, using mainnet for now
+			.SetGenesis("0100000000000000000000000000000000000000000000000000000000000000000000006db905142382324db417761891f2d2f355ea92f27ab0fc35e59e90b50e0534edf5d2af59ffff7f2011000000e965ffd002cd6ad0e2dc402b8044de833e06b23127ea8c3d80aec9141077149556e81f171bcc55a6ff8345e692c0f86e5b48e01b996cadc001622fb5e363b4210000000000000000000000000000000000000000000000000000000000000000ffffffff000101000000010000000000000000000000000000000000000000000000000000000000000000ffffffff420004bf91221d0104395365702030322c203230313720426974636f696e20627265616b732024352c30303020696e206c6174657374207072696365206672656e7a79ffffffff0100f2052a010000004341040d61d8653448c98731ee5fffd303c15e71ec2057b77f11ab3601979728cdaff2d68afbba14e4fa0bc44f2072b0b23ef63717f8cdfbe58dcd33f32b6afe98741aac00000000");
 			return builder;
 		}
+
+		protected override void PostInit()
+		{
+			RegisterDefaultCookiePath("MonetaryUnit");
+		}
+
 	}
 }
