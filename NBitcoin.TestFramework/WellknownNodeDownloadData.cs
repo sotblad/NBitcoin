@@ -1367,7 +1367,7 @@ namespace NBitcoin.Tests
 					DownloadLink = "https://apps.mymue.com/mon-2.1.6-x86_64-linux-gnu.tar.gz",
 					Archive = "mon-2.1.6-x86_64-linux-gnu.tar.gz",
 					Executable = "mon/bin/monetaryunitd",
-					Hash = "26d62569801cbcb2417adfbdafad4c9d9a0b32ba1f695986896814bb81caadde"
+					Hash = "3d8af1700a9aed1d09e591cf4ccafd5ac7d882aa249498f4aca8438c32332282"
 				},
 				Mac = new NodeOSDownloadData()
 				{
