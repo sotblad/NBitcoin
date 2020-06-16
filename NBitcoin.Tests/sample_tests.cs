@@ -15,10 +15,10 @@ namespace NBitcoin.Tests
 			using (var nodeBuilder = NodeBuilderEx.Create())
 			{
 				var rpc = nodeBuilder.CreateNode().CreateRPCClient();
-				Assert.Equal('test', rpc);
+				Assert.Equal("test", rpc);
 				
 				nodeBuilder.StartAll();
-				Assert.Equal('test', nodeBuilder);
+				Assert.Equal("test", nodeBuilder);
 				rpc.Generate(102);
 
 				// Build the keys and addresses
