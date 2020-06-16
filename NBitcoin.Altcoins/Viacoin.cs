@@ -357,7 +357,7 @@ namespace NBitcoin.Altcoins
 			.SetBech32(Bech32Type.WITNESS_SCRIPT_ADDRESS, Encoders.Bech32("tvia"))
 			.SetMagic(0x377b972d)
 			.SetPort(15224)
-			.SetRPCPort(15223)
+			.SetRPCPort(15224)
 			.SetName("via-reg")
 			.AddAlias("via-regtest")
 			.AddAlias("viacoin-reg")
