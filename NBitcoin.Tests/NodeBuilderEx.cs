@@ -12,7 +12,7 @@ namespace NBitcoin.Tests
 		{
 			//var builder = NodeBuilder.Create(NodeDownloadData.Litecoin.v0_17_1, Altcoins.Litecoin.Instance.Regtest, caller);
 
-			var builder = NodeBuilder.Create(NodeDownloadData.Viacoin.v0_15_2, Altcoins.Viacoin.Instance.Regtest, caller);
+			var builder = NodeBuilder.Create(NodeDownloadData.Viacoin.v0_15_2, Altcoins.Viacoin.Instance.Mainnet, caller);
 
 			//var builder = NodeBuilder.Create(NodeDownloadData.BCash.v0_16_2, Altcoins.BCash.Instance.Regtest, caller);
 
@@ -72,7 +72,7 @@ namespace NBitcoin.Tests
 		{
 			ServicePointManager.Expect100Continue = true;
 			ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
-			var builder = NodeBuilder.Create(NodeDownloadData.Viacoin.v0_15_2, Altcoins.Viacoin.Instance.Regtest, caller);
+			var builder = NodeBuilder.Create(NodeDownloadData.Viacoin.v0_15_2, Altcoins.Viacoin.Instance.Mainnet, caller);
 			return builder;
 		}
 	}
